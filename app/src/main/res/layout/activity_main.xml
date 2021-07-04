@@ -4,24 +4,24 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#C5DAEA"
     android:orientation="vertical"
     tools:context=".MainActivity">
 
-
     <TextView
-        android:id="@+id/ViewAllCustomer"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:layout_gravity="center"
-        android:background="@drawable/roundedtextview"
-        android:padding="12dp"
-        android:src="@drawable/button"
-        android:text="View all Customers"
-        android:textColor="#0B0A0A"
-        android:textSize="25dp"
-        />
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentTop="true"
+        android:text="All Users"
+        android:textSize="35sp"
+        android:gravity="center"
+        android:textStyle="bold"
+        android:textAllCaps="true"
+        android:textColor="@color/black"/>
 
-
+    <ListView
+        android:id="@+id/listView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="60dp" />
 </RelativeLayout>
