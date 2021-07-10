@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
+
 import java.util.Date;
 
 import androidx.annotation.Nullable;
@@ -13,7 +14,7 @@ import androidx.annotation.Nullable;
 import com.example.basicbanking.Credentials;
 import com.example.basicbanking.MyAccount;
 import com.example.basicbanking.SendMoney;
-
+import com.example.basicbanking.MainActivity;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +25,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
     public static final int DATABASE_VERSION = 1;
     public static final String DATABASE_NAME = "Banking.db";
-
+    String bal,pseudophno ;
     public DbHelper(@Nullable Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
@@ -36,30 +37,48 @@ public class DbHelper extends SQLiteOpenHelper {
                 + DatabaseContract.DatabaseEntry.FIRSTNAME + " TEXT NOT NULL, "
                 + DatabaseContract.DatabaseEntry.LASTNAME + " TEXT NOT NULL, "
                 + DatabaseContract.DatabaseEntry.EMAIL + " TEXT, "
-                + DatabaseContract.DatabaseEntry.PHONENO + " INTEGER NOT NULL, "
+                + DatabaseContract.DatabaseEntry.PHONENO + " TEXT NOT NULL, "
                 + DatabaseContract.DatabaseEntry.BALANCE + " INTEGER NOT NULL);";
-
 
         String SQL_CREATE_ENTRIES2 =  "CREATE TABLE " + DatabaseContract.DatabaseEntry.TRANSFERS_TABLE_NAME + " ("
                 + DatabaseContract.DatabaseEntry.TRANSFER_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
                 + DatabaseContract.DatabaseEntry.TRANSACTION_DATE + " DATE, "
                 + DatabaseContract.DatabaseEntry.RECEIVER + " TEXT, "
                 + DatabaseContract.DatabaseEntry.SENDER + " TEXT, "
-                + DatabaseContract.DatabaseEntry.AMOUNTSENT + " TEXT);";
+                + DatabaseContract.DatabaseEntry.AMOUNTSENT + " TEXT, "
+                + DatabaseContract.DatabaseEntry.SENDERNAME + " INTEGER NOT NULL, "
+                + DatabaseContract.DatabaseEntry.RECEIVERNAME + " INTEGER NOT NULL);";
 
         String SQL_CREATE_ENTRIES3 = "CREATE TABLE " + DatabaseContract.DatabaseEntry.CONTACT_TABLE_NAME + " ("
-                +DatabaseContract.DatabaseEntry.KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
                 +DatabaseContract.DatabaseEntry.KEY_NAME + " TEXT NOT NULL, "
-                +DatabaseContract.DatabaseEntry.KEY_PHONE + " TEXT NOT NULL); ";
+                +DatabaseContract.DatabaseEntry.KEY_PHONE + " TEXT PRIMARY KEY NOT NULL, " +
+                " UNIQUE (phone_number) ON CONFLICT REPLACE); ";
 
-        String SQL_CREATE_ENTRIES4 = "CREATE TABLE " + DatabaseContract.DatabaseEntry.USER_CREDENTIALS_TABLE_NAME + " ("
-                +DatabaseContract.DatabaseEntry.ACCOUNT_NO + " TEXT NOT NULL PRIMARY KEY, "
-                +DatabaseContract.DatabaseEntry.PASSWORD + " TEXT NOT NULL); ";
+//        String SQL_CREATE_ENTRIES4 = "CREATE TABLE " + DatabaseContract.DatabaseEntry.USER_CREDENTIALS_TABLE_NAME + " ("
+//                +DatabaseContract.DatabaseEntry.ACCOUNT_NO + " TEXT NOT NULL PRIMARY KEY, "
+//                +DatabaseContract.DatabaseEntry.PASSWORD + " TEXT NOT NULL); ";
 
+        String SQL_CREATE_ENTRIES5 =  "CREATE TABLE " + DatabaseContract.DatabaseEntry.MY_ACCOUNT_TABLE_NAME + " ("
+                + DatabaseContract.DatabaseEntry.ACCOUNT_NO + " TEXT PRIMARY KEY, "
+                + DatabaseContract.DatabaseEntry.PASSWORD + " TEXT NOT NULL, "
+                + DatabaseContract.DatabaseEntry.PHONENO + " TEXT NOT NULL, "
+                + DatabaseContract.DatabaseEntry.BALANCE + " INTEGER NOT NULL); ";
+//
         db.execSQL(SQL_CREATE_ENTRIES);
         db.execSQL(SQL_CREATE_ENTRIES2);
         db.execSQL(SQL_CREATE_ENTRIES3);
-        db.execSQL(SQL_CREATE_ENTRIES4);
+      //  db.execSQL(SQL_CREATE_ENTRIES4);
+        db.execSQL(SQL_CREATE_ENTRIES5);
+        db.execSQL("INSERT or replace INTO My_account (Account_no, Password, PhoneNo, Balance) VALUES('1234123412341231','1111','7020902520',500)");
+        db.execSQL("INSERT or replace INTO My_account (Account_no, Password, PhoneNo, Balance) VALUES('1234123412341232','2222','7232564587',1500)");
+        db.execSQL("INSERT or replace INTO My_account (Account_no, Password, PhoneNo, Balance) VALUES('1234123412341233','3333','7025455450',1500)");
+        db.execSQL("INSERT or replace INTO My_account (Account_no, Password, PhoneNo, Balance) VALUES('1234123412341234','4444','7988568879',1500)");
+        db.execSQL("INSERT or replace INTO My_account (Account_no, Password, PhoneNo, Balance) VALUES('1234123412341235','5555','7054654654',500)");
+        db.execSQL("INSERT or replace INTO My_account (Account_no, Password, PhoneNo, Balance) VALUES('1234123412341236','6666','7878898989',1500)");
+        db.execSQL("INSERT or replace INTO My_account (Account_no, Password, PhoneNo, Balance) VALUES('1234123412341237','7777','7089798989',500)");
+        db.execSQL("INSERT or replace INTO My_account (Account_no, Password, PhoneNo, Balance) VALUES('1234123412341238','8888','7115154556',1500)");
+        db.execSQL("INSERT or replace INTO My_account (Account_no, Password, PhoneNo, Balance) VALUES('1234123412341239','9999','7065656565',500)");
+        db.execSQL("INSERT or replace INTO My_account (Account_no, Password, PhoneNo, Balance) VALUES('1234123412341230','1000','7798615654',1500)");
 
 
     }
@@ -76,9 +95,7 @@ public class DbHelper extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         values.put(DatabaseContract.DatabaseEntry.KEY_NAME,contact.getName());
         values.put(DatabaseContract.DatabaseEntry.KEY_PHONE,contact.getPhoneNumber());
-
         db.insert(DatabaseContract.DatabaseEntry.CONTACT_TABLE_NAME,null,values);
-        Log.d("contact","Successfully inserted");
         db.close();
     }
 
@@ -94,26 +111,14 @@ public class DbHelper extends SQLiteOpenHelper {
           if(cursor.moveToFirst()){
             do{
                 Contact contact = new Contact();
-                contact.setId(cursor.getInt(0));
-                contact.setName(cursor.getString(1));
-                contact.setPhoneNumber(cursor.getString(2));
+               // contact.setId(cursor.getInt(0));
+                contact.setName(cursor.getString(0));
+                contact.setPhoneNumber(cursor.getString(1));
                 contactList.add(contact);
             }while(cursor.moveToNext());
         }
         return contactList;
     }
-
-//    public int updateContact(Contact contact){
-//        SQLiteDatabase db = this.getWritableDatabase();
-//
-//        ContentValues values = new ContentValues();
-//        values.put(DatabaseContract.DatabaseEntry.KEY_NAME, contact.getName());
-//        values.put(DatabaseContract.DatabaseEntry.KEY_PHONE, contact.getPhoneNumber());
-//
-//        //Lets update now
-//        return db.update(DatabaseContract.DatabaseEntry.CONTACT_TABLE_NAME, values, DatabaseContract.DatabaseEntry.KEY_ID + "=?",
-//                new String[]{String.valueOf(contact.getId())});
-//    }
 
     //---------above code for contact db------------
     public void addCredentials(Credentials credentials){
@@ -124,26 +129,27 @@ public class DbHelper extends SQLiteOpenHelper {
         values.put(DatabaseContract.DatabaseEntry.PASSWORD,credentials.getPassword());
 
         db.insert(DatabaseContract.DatabaseEntry.USER_CREDENTIALS_TABLE_NAME,null,values);
-        Log.d("contact","Successfully inserted");
         db.close();
     }
 
     public String searchPass(String uname){
         SQLiteDatabase db =  this.getReadableDatabase();
-        String query = "SELECT ACCOUNT_NO, PASSWORD FROM " + DatabaseContract.DatabaseEntry.USER_CREDENTIALS_TABLE_NAME;
+        String query = "SELECT Account_no, Password, PhoneNo FROM " + DatabaseContract.DatabaseEntry.MY_ACCOUNT_TABLE_NAME + " WHERE PhoneNo = " + MainActivity.phno ;
         Cursor cursor = db.rawQuery(query,null);
         String a,b;
         b = "not found";
-        if(cursor.moveToFirst()){
-            do {
-                a = cursor.getString(0);
-
-                if (a.equals(uname)) {
-                    b = cursor.getString(1);
-                    break;
+        if(cursor.moveToFirst()) {
+            String c =cursor.getString(2);
+            if (c.equals(MainActivity.phno)) {
+                do {
+                    a = cursor.getString(0);
+                    if (a.equals(uname)) {//here do something to match valid phno and accno
+                        b = cursor.getString(1);
+                        break;
+                    }
                 }
+                while (cursor.moveToNext());
             }
-            while (cursor.moveToNext());
         }
         return b;
     }
@@ -171,27 +177,42 @@ public class DbHelper extends SQLiteOpenHelper {
 
         ContentValues values = new ContentValues();
         values.put(DatabaseContract.DatabaseEntry.TRANSACTION_DATE, dateFormat.format(now));
-        values.put(DatabaseContract.DatabaseEntry.RECEIVER, "SHIV");
-        values.put(DatabaseContract.DatabaseEntry.SENDER, "ADITYA");
+        values.put(DatabaseContract.DatabaseEntry.RECEIVER, MyAccount.myaccountphno);
+        values.put(DatabaseContract.DatabaseEntry.SENDER, MainActivity.phno);
         values.put(DatabaseContract.DatabaseEntry.AMOUNTSENT, sendMoney.amount);
+        values.put(DatabaseContract.DatabaseEntry.SENDERNAME, MainActivity.username);
+        values.put(DatabaseContract.DatabaseEntry.RECEIVERNAME, MyAccount.splitfirstname);
 
         db.insert(DatabaseContract.DatabaseEntry.TRANSFERS_TABLE_NAME,null,values);
         db.close();
 }
+    public void updateBalance(SendMoney sendMoney){
+        SQLiteDatabase db = this.getWritableDatabase();
+        String update1 = "UPDATE My_account SET Balance = Balance + "+sendMoney.amount+ " WHERE PhoneNo = " +MyAccount.myaccountphno;
+        String update2 = "UPDATE My_account SET Balance = Balance - "+sendMoney.amount+" WHERE PhoneNo = " +MainActivity.phno;
+        db.execSQL(update1);
+        db.execSQL(update2);
+        insertMoney(sendMoney);
+    }
     //----------------above code to put data in user_table--------------
     public String showBalance(){
-
         SQLiteDatabase db = this.getReadableDatabase();
-        // Generate the query to read from the database
-       // String select = "SELECT * FROM " + DatabaseContract.DatabaseEntry.USER_TABLE_NAME;
-        String[] projection ={DatabaseContract.DatabaseEntry.USER_ID,DatabaseContract.DatabaseEntry.BALANCE };
-        String selection = DatabaseContract.DatabaseEntry.USER_ID + "=1";
-        Cursor cursor = db.query(DatabaseContract.DatabaseEntry.USER_TABLE_NAME,projection,selection,null,null,null,null);
-       // Cursor cursor = db.rawQuery("SELECT Balance FROM " + DatabaseContract.DatabaseEntry.USER_TABLE_NAME + "WHERE _ID = 1", null);
-        cursor.moveToFirst();
-        int bal = cursor.getInt(1);
+
+        Cursor cursor = db.rawQuery("SELECT PhoneNo,Balance FROM " + DatabaseContract.DatabaseEntry.MY_ACCOUNT_TABLE_NAME
+                + " WHERE PhoneNo = " + MainActivity.phno ,null);
+
+        if(cursor.moveToFirst()){
+                pseudophno = cursor.getString(0);
+            do {
+                    bal = cursor.getString(1);
+            }
+            while (cursor.moveToNext());
+        }
         String rupees = "\u20B9";
         try {
+         Log.v("in db","balance is "+ bal);
+            Log.v("in db","pseudophno"+ pseudophno);
+            Log.v("in listview","user click on"+ MainActivity.phno);
         return "Balance " + rupees + "\n" + bal;
         } finally {
             // Always close the cursor when you're done reading from it. This releases all its

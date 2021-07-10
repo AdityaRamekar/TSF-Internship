@@ -26,7 +26,7 @@
         <TextView
             android:id="@+id/showbal"
             android:layout_width="176dp"
-            android:layout_height="150dp"
+            android:layout_height="70dp"
             android:background="@drawable/custom_button"
             android:textColor="@color/black"
             android:textAlignment="gravity"
@@ -35,15 +35,17 @@
             android:gravity="center_horizontal" />
 
         <TextView
+            android:id="@+id/history"
             android:layout_width="176dp"
-            android:layout_height="150dp"
+            android:layout_height="70dp"
             android:textColor="@color/black"
             android:background="@drawable/custom_button"
             android:textAlignment="gravity"
             android:textSize="20sp"
             android:gravity="center_horizontal"
             android:layout_margin="2dp"
-            android:text="history"/>
+            android:onClick="intentHistory"
+            android:text="sent history"/>
 
     </LinearLayout>
 

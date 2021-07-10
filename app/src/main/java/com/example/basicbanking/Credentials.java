@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -43,14 +44,16 @@ public class Credentials extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_credentials);
         this.setTitle("Enter Your Credentials");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        overridePendingTransition(R.anim.nothing,R.anim.nothing);
     }
 
     public void onButtonClick(View v) {
         DbHelper db = new DbHelper(Credentials.this);
         if (v.getId() == R.id.btnSign) {
-            EditText a = findViewById(R.id.txtusername);
+            EditText a = findViewById(R.id.txtaccountno);
             String str = a.getText().toString();
-            EditText b = findViewById(R.id.txtpassword);
+            EditText b = findViewById(R.id.txtpin);
             String pass = b.getText().toString();
 
             String password = db.searchPass(str);

@@ -9,7 +9,7 @@ public final class DatabaseContract {
 
     public static final class DatabaseEntry implements BaseColumns {
         //name of column in Contact_Table
-        public static final String KEY_ID = "contact_id";
+       // public static final String KEY_ID = "contact_id";
         public static final String KEY_NAME = "name";
         public static final String KEY_PHONE = "phone_number";
 
@@ -20,6 +20,7 @@ public final class DatabaseContract {
         public static final String EMAIL = "Email";
         public static final String PHONENO = "PhoneNo";
         public static final String BALANCE = "Balance";
+        public static final String STATUS = "Status";
 
         //name of column in User_credentials
         public static final String ACCOUNT_NO = "Account_no";
@@ -31,12 +32,15 @@ public final class DatabaseContract {
         public static final String SENDER = "Sender";
         public static final String RECEIVER = "Receiver";
         public static final String AMOUNTSENT = "AmountSent";
+        public static final String SENDERNAME = "SenderName";
+        public static final String RECEIVERNAME = "ReceiverName";
 
         //Name of Tables
         public static final String USER_CREDENTIALS_TABLE_NAME = "user_credentials";
         public static final String USER_TABLE_NAME = "User_Table";
         public static final String TRANSFERS_TABLE_NAME = "Transfers_Table";
         public static final String CONTACT_TABLE_NAME = "Contact";
+        public static final String MY_ACCOUNT_TABLE_NAME = "My_account";//contain relations->phonenumber,accountno,password,balance
     }
 
 }
